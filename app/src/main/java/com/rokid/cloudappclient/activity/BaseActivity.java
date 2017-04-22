@@ -10,13 +10,15 @@ import com.rokid.cloudappclient.R;
 import com.rokid.cloudappclient.bean.CommonResponse;
 import com.rokid.cloudappclient.bean.NLPBean;
 import com.rokid.cloudappclient.bean.RealAction;
+import com.rokid.cloudappclient.bean.base.BaseTransferBean;
 import com.rokid.cloudappclient.bean.response.responseinfo.ResponseBean;
 import com.rokid.cloudappclient.bean.response.responseinfo.action.ActionBean;
-import com.rokid.cloudappclient.manager.ActionManager;
-import com.rokid.cloudappclient.manager.action.MediaAction;
-import com.rokid.cloudappclient.manager.StateManager;
-import com.rokid.cloudappclient.manager.action.VoiceAction;
-import com.rokid.cloudappclient.manager.queue.MsgContainerManager;
+import com.rokid.cloudappclient.bean.transfer.TransferMediaBean;
+import com.rokid.cloudappclient.bean.transfer.TransferVoiceBean;
+import com.rokid.cloudappclient.msg.action.MediaAction;
+import com.rokid.cloudappclient.msg.manager.StateManager;
+import com.rokid.cloudappclient.msg.action.VoiceAction;
+import com.rokid.cloudappclient.msg.manager.MsgContainerManager;
 import com.rokid.cloudappclient.util.CommonResponseHelper;
 import com.rokid.cloudappclient.util.Logger;
 import com.rokid.cloudappclient.util.TTSHelper;
@@ -38,7 +40,7 @@ public abstract class BaseActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Logger.i("RKCloudAppActivity OnCreated");
+        Logger.d("RKCloudAppActivity OnCreated");
 
         setContentView(getLayoutId());
         initViews(savedInstanceState);
@@ -49,7 +51,7 @@ public abstract class BaseActivity extends Activity {
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        Logger.i("RKCloudAppActivity onNewIntent");
+        Logger.d("RKCloudAppActivity onNewIntent");
 
         checkIntent(intent);
         setIntent(intent);
@@ -58,19 +60,19 @@ public abstract class BaseActivity extends Activity {
     @Override
     protected void onRestart() {
         super.onRestart();
-        Logger.i("RKCloudAppActivity onRestart");
+        Logger.d("RKCloudAppActivity onRestart");
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        Logger.i("RKCloudAppActivity onStart");
+        Logger.d("RKCloudAppActivity onStart");
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        Logger.i("RKCloudAppActivity onResume");
+        Logger.d("RKCloudAppActivity onResume");
 
         if (StateManager.getInstance().getAppState() == StateManager.AppState.PENDING) {
             StateManager.getInstance().restoreAllLastState();
@@ -81,7 +83,7 @@ public abstract class BaseActivity extends Activity {
     @Override
     protected void onPause() {
         super.onPause();
-        Logger.i("RKCloudAppActivity onPause");
+        Logger.d("RKCloudAppActivity onPause");
 
         StateManager.getInstance().updateAppState(StateManager.AppState.PENDING);
         StateManager.getInstance().storeAllLastState();
@@ -90,13 +92,17 @@ public abstract class BaseActivity extends Activity {
     @Override
     protected void onStop() {
         super.onStop();
-        Logger.i("RKCloudAppActivity onStop");
+        Logger.d("RKCloudAppActivity onStop");
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+<<<<<<< HEAD
         Logger.i("RKCloudApp onDestroy");
+=======
+        Logger.d("RKCloudApp onDestroy");
+>>>>>>> Initial commit
     }
 
     // TODO
@@ -107,14 +113,18 @@ public abstract class BaseActivity extends Activity {
         } else {
             CommonResponse commonResponse = parseIntent(intent);
             if (null == commonResponse) {
-                Logger.i("parse common response failed");
+                Logger.d("parse common response failed");
                 speakNLPDateEmptyErrorTTS();
                 return;
             }
 
             RealAction realAction = CommonResponseHelper.validateCommonResponse(commonResponse);
             if (null == realAction || !realAction.isValid()) {
+<<<<<<< HEAD
                 Logger.i("action for cloud app is illegal");
+=======
+                Logger.d("action for cloud app is illegal");
+>>>>>>> Initial commit
                 // TODO: check app state. if app is running well, ignore this exception. Otherwise, show exception.
                 return;
             }
@@ -214,7 +224,7 @@ public abstract class BaseActivity extends Activity {
     }
 
     private void updateCurrentApplicationInfo(final RealAction realAction) {
-        Logger.i("updateCurrentApplicationInfo");
+        Logger.d("updateCurrentApplicationInfo");
 
         StateManager.getInstance().setCurrentAppInfo(realAction.getDomain(), realAction.getShot());
     }
@@ -225,10 +235,10 @@ public abstract class BaseActivity extends Activity {
         String actionType = realAction.getActionType();
         String shot = realAction.getShot();
 
-        Logger.i("primaryReadActionHandling - responseType: " + responseType + ", actionType: " + actionType + ", shot: " + shot);
+        Logger.d("primaryReadActionHandling - responseType: " + responseType + ", actionType: " + actionType + ", shot: " + shot);
 
         if (!TextUtils.isEmpty(actionType) && ActionBean.TYPE_EXIT.equals(actionType)) {
-            Logger.i("current response is a INTENT EXIT - Finish Activity");
+            Logger.d("current response is a INTENT EXIT - Finish Activity");
             finish();
         } else if (ResponseBean.TYPE_INTENT.equals(responseType) && ResponseBean.SHOT_CUT.equals(shot)) {
             // when the response type is INTENT and the application shot is CUT, current action should be
@@ -251,7 +261,16 @@ public abstract class BaseActivity extends Activity {
      * @param realAction the validated action
      */
     protected void processRealAction(RealAction realAction){
-        ActionManager.getInstance().handleAction(realAction);
+        if (realAction == null)
+            return;
+
+        dispatcher(new TransferVoiceBean(realAction.getDomain(), realAction.getShot(), realAction.getVoice()));
+        dispatcher(new TransferMediaBean(realAction.getDomain(), realAction.getShot(), realAction.getMedia()));
+
+    }
+
+    private void dispatcher(BaseTransferBean transferObject) {
+        MsgContainerManager.getInstance().push(transferObject);
     }
 
 }

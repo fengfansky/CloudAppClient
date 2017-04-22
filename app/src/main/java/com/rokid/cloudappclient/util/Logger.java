@@ -2,7 +2,7 @@ package com.rokid.cloudappclient.util;
 
 import android.util.Log;
 
-import com.rokid.system.cloudappclient.BuildConfig;
+import com.rokid.cloudappclient.BuildConfig;
 
 import java.util.Locale;
 

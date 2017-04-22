@@ -2,8 +2,6 @@ package com.rokid.cloudappclient.util;
 
 import android.text.TextUtils;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.rokid.cloudappclient.bean.CommonResponse;
 import com.rokid.cloudappclient.bean.RealAction;
 import com.rokid.cloudappclient.bean.response.CloudAppResponse;
