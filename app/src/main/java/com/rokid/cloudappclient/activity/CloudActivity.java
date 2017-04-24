@@ -3,7 +3,7 @@ package com.rokid.cloudappclient.activity;
 import android.os.Bundle;
 
 
-public class MainActivity extends BaseActivity {
+public class CloudActivity extends BaseActivity {
 
     @Override
     protected int getLayoutId() {

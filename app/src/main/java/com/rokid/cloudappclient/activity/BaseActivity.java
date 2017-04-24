@@ -42,7 +42,6 @@ public abstract class BaseActivity extends Activity {
         super.onCreate(savedInstanceState);
         Logger.d("RKCloudAppActivity OnCreated");
 
-        setContentView(getLayoutId());
         initViews(savedInstanceState);
 
         checkIntent(getIntent());
