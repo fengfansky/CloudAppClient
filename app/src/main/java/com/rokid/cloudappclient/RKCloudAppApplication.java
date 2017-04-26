@@ -2,6 +2,7 @@ package com.rokid.cloudappclient;
 
 import android.app.Application;
 
+import com.rokid.cloudappclient.util.Logger;
 import com.rokid.cloudappclient.util.TTSHelper;
 
 import java.util.concurrent.LinkedBlockingQueue;
@@ -11,7 +12,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * This class is a global application,
  * can be used to sets some global variables, methods, thread pool and cache.
- *
+ * <p>
  * Author: xupan.shi
  * Version: V0.1 2017/3/7
  */
@@ -31,7 +32,7 @@ public class RKCloudAppApplication extends Application {
         instance = this;
 
         // Start to Binding Remote TTS Service
-        TTSHelper.getInstance().bindTTSService();
+//        TTSHelper.getInstance().bindTTSService();
 
         // Initialize the thread pool.
         initThreadPoolExecute();

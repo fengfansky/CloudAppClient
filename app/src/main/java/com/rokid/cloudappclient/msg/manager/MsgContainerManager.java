@@ -7,11 +7,6 @@ import com.rokid.cloudappclient.bean.response.responseinfo.ResponseBean;
 import com.rokid.cloudappclient.msg.queue.IMsgQueue;
 import com.rokid.cloudappclient.util.Logger;
 
-
-/**
- * Created by fanfeng on 2017/4/20.
- */
-
 public class MsgContainerManager implements IMsgQueue {
 
 
@@ -37,6 +32,8 @@ public class MsgContainerManager implements IMsgQueue {
 
     @Override
     public void push(BaseTransferBean transferBean) {
+        Logger.d("push msg");
+
         if (null == transferBean || !transferBean.isValid()) {
             Logger.d("ValidateObject is invalid!!!");
             return;
@@ -49,7 +46,7 @@ public class MsgContainerManager implements IMsgQueue {
             return;
         }
 
-        MsgContainer msgContainer = null;
+        MsgContainer msgContainer;
 
         switch (transferBean.getShot()) {
             case ResponseBean.SHOT_SCENE:
@@ -57,20 +54,23 @@ public class MsgContainerManager implements IMsgQueue {
                     sceneContainer = new MsgContainer(transferBean.getDomain());
                 }
                 msgContainer = sceneContainer;
+                msgContainer.push(transferBean);
                 break;
             case ResponseBean.SHOT_CUT:
                 if (null == cutContainer || !transferBean.getDomain().equals(cutContainer.domain)) {
                     cutContainer = new MsgContainer(transferBean.getDomain());
                 }
                 msgContainer = cutContainer;
+                msgContainer.push(transferBean);
                 break;
         }
 
-        msgContainer.push(transferBean);
     }
 
     @Override
     public BaseTransferBean poll(BaseTransferBean transferBean) {
+        Logger.d("poll msg");
+
         if (null == transferBean || !transferBean.isValid()) {
             Logger.d("ValidateObject is invalid!!!");
             return null;
@@ -100,6 +100,8 @@ public class MsgContainerManager implements IMsgQueue {
 
     @Override
     public void clear() {
+        Logger.d("clear msg");
+
         String domain = StateManager.getInstance().getCurrentAppDomain();
         String shot = StateManager.getInstance().getCurrentAppShot();
 

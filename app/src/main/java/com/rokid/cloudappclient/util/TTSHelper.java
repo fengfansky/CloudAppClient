@@ -1,23 +1,17 @@
 package com.rokid.cloudappclient.util;
 
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
-import android.os.IBinder;
 import android.os.RemoteException;
 import android.text.TextUtils;
-
-import com.rokid.cloudappclient.RKCloudAppApplication;
-import com.rokid.tts.ITts;
-import com.rokid.tts.ITtsCallback;
 
 import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
 
+import rokid.os.RKTTS;
+import rokid.os.RKTTSCallback;
+
 /**
  * This is a TTS tools, used to send the TTS, stop the TTS.
- *
+ * <p>
  * Author: xupan.shi
  * Version: V0.1 2017/3/10
  */
@@ -25,25 +19,20 @@ public class TTSHelper {
 
     private static final int WAIT = -2;
     private static final int STOP = -1;
-    private static final int QUEUE_CAPACITY = 5;
+    private static final int QUEUE_CAPACITY = 30;
     private volatile static TTSHelper instance;
-    private ITts tts;
+    private RKTTS rkTts;
     private int ttsId = STOP;
     private Queue<Node> bufferQueue = new ArrayBlockingQueue<>(QUEUE_CAPACITY);
+
+    private static final String TTS_SERVICE_NAME = "com.rokid.tts.TtsService";
+    private static final String TTS_PACKAGE_NAME = "com.rokid.tts";
 
     /**
      * Private constructor, avoid this class wall be instantiated.
      */
     private TTSHelper() {
-    }
-
-    public void bindTTSService() {
-        if (null == tts) {
-            Intent intent = new Intent("com.com.rokid.tts.TtsService");
-            intent.setPackage("com.com.rokid.tts");
-            Boolean isBind = RKCloudAppApplication.getInstance().bindService(intent, conn, Context.BIND_AUTO_CREATE);
-            Logger.d("Start to Bind : " + isBind);
-        }
+        rkTts = new RKTTS();
     }
 
     public static TTSHelper getInstance() {
@@ -65,85 +54,74 @@ public class TTSHelper {
             return STOP;
         }
 
-        try {
-            Logger.d("TTSContent: " + ttsContent);
-            return speakTTS(ttsContent, true, new ITtsCallback.Stub() {
-                @Override
-                public void onStart(int id) {
-                    Logger.i("TTS is onStart - id: " + id);
-                    if (null != callback) {
-                        callback.onStart(id);
-                    }
-
-                    ttsId = id;
+        ttsId = rkTts.speak(ttsContent, new RKTTSCallback() {
+            @Override
+            public void onStart(int id) {
+                super.onStart(id);
+                Logger.i("TTS is onStart - id: " + id);
+                if (null != callback) {
+                    callback.onStart(id);
                 }
 
-                @Override
-                public void onComplete(int id) {
-                    Logger.i("TTS is onComplete - id: " + id);
-                    if (null != callback) {
-                        callback.onTTSFinish();
-                    }
+                ttsId = id;
+            }
 
-                    ttsId = STOP;
-                    speakTTSFromBufferQueue();
+            @Override
+            public void onCancel(int id) {
+                super.onCancel(id);
+                Logger.i("TTS is onStop - id: " + id + ", current id: " + ttsId);
+
+                if (id != ttsId) {
+                    Logger.i("The new tts is already speaking, previous tts stop should not callback");
+                    return;
                 }
 
-                @Override
-                public void onStop(int id) {
-                    Logger.i("TTS is onStop - id: " + id + ", current id: " + ttsId);
-
-                    if (id != ttsId) {
-                        Logger.i("The new tts is already speaking, previous tts stop should not callback");
-                        return;
-                    }
-
-                    if (null != callback) {
-                        callback.onTTSFinish();
-                    }
-
-                    ttsId = STOP;
-                    speakTTSFromBufferQueue();
+                if (null != callback) {
+                    callback.onTTSFinish();
                 }
 
-                @Override
-                public void onError(int id, int err) {
-                    Logger.i("tts onError - id: " + id + ", error: " + err);
-                    if (null != callback) {
-                        callback.onTTSFinish();
-                    }
+                ttsId = STOP;
+                speakTTSFromBufferQueue();
+            }
 
-                    ttsId = STOP;
-                    speakTTSFromBufferQueue();
+            @Override
+            public void onComplete(int id) {
+                super.onComplete(id);
+                Logger.i("TTS is onComplete - id: " + id);
+                if (null != callback) {
+                    callback.onTTSFinish();
                 }
-            });
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
+
+                ttsId = STOP;
+                speakTTSFromBufferQueue();
+            }
+
+            @Override
+            public void onError(int id, int err) {
+                super.onError(id, err);
+                Logger.i("tts onError - id: " + id + ", error: " + err);
+                if (null != callback) {
+                    callback.onTTSFinish();
+                }
+
+                ttsId = STOP;
+                speakTTSFromBufferQueue();
+            }
+        });
 
         return STOP;
     }
 
-    private int speakTTS(String ttsContent, boolean isNeedSendWidget, ITtsCallback callback) throws RemoteException {
+    private int speakTTS(String ttsContent, boolean isNeedSendWidget, RKTTSCallback callback) throws RemoteException {
         if (TextUtils.isEmpty(ttsContent)) {
             Logger.e("The TTS Content can't be empty!!!");
             callback.onError(STOP, STOP);
             return STOP;
         }
 
-        if (null == tts) {
-            Logger.i("TTSService is unbind, push the data to the buffer queue!!!");
-            bufferQueue.add(new Node(ttsContent, isNeedSendWidget, callback));
-            return WAIT;
-        }
-
         Logger.i("start to speakTTS - ttsContent: " + ttsContent);
-        ttsId = tts.speak(ttsContent, callback);
 
-        if (isNeedSendWidget) {
-            Logger.i("is need send the widget");
-            WidgetUtils.sendTxtWidget(ttsContent);
-        }
+        rkTts.speak(ttsContent, callback);
 
         return ttsId;
     }
@@ -153,18 +131,15 @@ public class TTSHelper {
     }
 
     public void stopTTS(int ttsId) {
-        if (null == tts || ttsId <= STOP) {
+        if (ttsId <= STOP) {
             Logger.e("TTSService is unbind");
             return;
         }
 
-        try {
-            tts.stop(ttsId);
-            ttsId = STOP;
-            Logger.i("ttsId: " + ttsId);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
+        Logger.d("stopTTS tts ");
+        rkTts.stop(ttsId);
+        ttsId = STOP;
+        Logger.i("ttsId: " + ttsId);
     }
 
     private void speakTTSFromBufferQueue() {
@@ -182,27 +157,12 @@ public class TTSHelper {
         }
     }
 
-    private ServiceConnection conn = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            Logger.i("name : " + name);
-            tts = ITts.Stub.asInterface(service);
-            speakTTSFromBufferQueue();
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            Logger.i("name : " + name);
-            tts = null;
-        }
-    };
-
     private static class Node {
         String ttsContent;
         boolean isNeedSendWidget;
-        ITtsCallback callback;
+        RKTTSCallback callback;
 
-        public Node(String ttsContent, boolean isNeedSendWidget, ITtsCallback callback) {
+        public Node(String ttsContent, boolean isNeedSendWidget, RKTTSCallback callback) {
             this.ttsContent = ttsContent;
             this.isNeedSendWidget = isNeedSendWidget;
             this.callback = callback;

@@ -10,12 +10,10 @@ import com.rokid.cloudappclient.bean.response.responseinfo.action.ActionBean;
 import com.rokid.cloudappclient.bean.response.responseinfo.action.media.MediaBean;
 import com.rokid.cloudappclient.bean.response.responseinfo.action.voice.VoiceBean;
 
-/**
- * Created by showingcp on 3/13/17.
- */
 
 public class CommonResponseHelper {
 
+    private static final String PROTOCOL_VERSION = "2.0.0";
 
     private static boolean checkCloudAppAction(CloudAppResponse action) {
         if (action == null) {
@@ -25,7 +23,7 @@ public class CommonResponseHelper {
 
         // check version
         String version = action.getVersion();
-        if (TextUtils.isEmpty(version) || !version.equals(CommonConfig.PROTOCOL_VERSION)) {
+        if (TextUtils.isEmpty(version) || !version.equals(PROTOCOL_VERSION)) {
             Logger.i("checkCloudAppAction: given protocol version: " + version + " is invalid");
             return false;
         }
@@ -144,8 +142,6 @@ public class CommonResponseHelper {
     /**
      * Private method to check voice, media and display
      *
-     * @param responseBean
-     * @return
      */
     private static boolean checkActionElements(ResponseBean responseBean) {
         ActionBean responseAction = responseBean.getAction();

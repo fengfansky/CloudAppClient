@@ -6,10 +6,6 @@ import com.rokid.cloudappclient.msg.manager.StateManager;
 import com.rokid.cloudappclient.util.Logger;
 import com.rokid.cloudappclient.util.TTSHelper;
 
-/**
- * Created by fanfeng on 2017/4/20.
- */
-
 public class VoiceAction extends BaseAction<TransferVoiceBean> {
 
     private static volatile VoiceAction voiceAction;
@@ -41,7 +37,7 @@ public class VoiceAction extends BaseAction<TransferVoiceBean> {
         }
 
         StateManager.getInstance().updateVoiceState(StateManager.VoiceState.PLAYING);
-        mTransfer.setTtsId(TTSHelper.getInstance().speakTTS(ttsContent,
+        int ttsId = TTSHelper.getInstance().speakTTS(ttsContent,
                 new TTSHelper.TTSCallback() {
                     @Override
                     public void onStart(int id) {
@@ -54,8 +50,8 @@ public class VoiceAction extends BaseAction<TransferVoiceBean> {
                         StateManager.getInstance().updateVoiceState(StateManager.VoiceState.STOPPED);
 
                     }
-                })
-        );
+                });
+        mTransfer.setTtsId(ttsId);
     }
 
     @Override

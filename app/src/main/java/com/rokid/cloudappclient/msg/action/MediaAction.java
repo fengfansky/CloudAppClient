@@ -7,10 +7,6 @@ import com.rokid.cloudappclient.util.AudioPlayerUtils;
 import com.rokid.cloudappclient.util.Logger;
 import com.rokid.rkaudioplayer.state.RKAudioState;
 
-/**
- * Created by fanfeng on 2017/4/20.
- */
-
 public class MediaAction extends BaseAction<TransferMediaBean> {
 
 
@@ -95,6 +91,8 @@ public class MediaAction extends BaseAction<TransferMediaBean> {
 
     @Override
     public synchronized void stopPlay() {
+        Logger.d("stopMedia");
+
         if (mTransfer == null) {
             Logger.d("mTransfer == null");
             return;

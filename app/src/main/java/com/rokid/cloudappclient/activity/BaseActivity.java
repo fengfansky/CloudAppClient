@@ -97,11 +97,7 @@ public abstract class BaseActivity extends Activity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-<<<<<<< HEAD
-        Logger.i("RKCloudApp onDestroy");
-=======
         Logger.d("RKCloudApp onDestroy");
->>>>>>> Initial commit
     }
 
     // TODO
@@ -119,11 +115,8 @@ public abstract class BaseActivity extends Activity {
 
             RealAction realAction = CommonResponseHelper.validateCommonResponse(commonResponse);
             if (null == realAction || !realAction.isValid()) {
-<<<<<<< HEAD
-                Logger.i("action for cloud app is illegal");
-=======
+
                 Logger.d("action for cloud app is illegal");
->>>>>>> Initial commit
                 // TODO: check app state. if app is running well, ignore this exception. Otherwise, show exception.
                 return;
             }
@@ -263,9 +256,12 @@ public abstract class BaseActivity extends Activity {
         if (realAction == null)
             return;
 
-        dispatcher(new TransferVoiceBean(realAction.getDomain(), realAction.getShot(), realAction.getVoice()));
-        dispatcher(new TransferMediaBean(realAction.getDomain(), realAction.getShot(), realAction.getMedia()));
-
+        if (realAction.getVoice() != null) {
+            dispatcher(new TransferVoiceBean(realAction.getDomain(), realAction.getShot(), realAction.getVoice()));
+        }
+        if (realAction.getMedia() != null) {
+            dispatcher(new TransferMediaBean(realAction.getDomain(), realAction.getShot(), realAction.getMedia()));
+        }
     }
 
     private void dispatcher(BaseTransferBean transferObject) {

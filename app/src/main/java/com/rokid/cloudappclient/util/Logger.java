@@ -8,13 +8,15 @@ import java.util.Locale;
 
 /**
  * This is the class to do print log of all levels.
- *
+ * <p>
  * Author: xupan.shi
  * Version: V0.1 2017/3/8
  */
 public class Logger {
 
-    /** This is a log tag and it also contains the source of a log message. */
+    /**
+     * This is a log tag and it also contains the source of a log message.
+     */
     private static final String TAG = "CloudAppClient - %1$s.%2$s(L:%3$d)";
 
     /**
