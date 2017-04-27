@@ -21,19 +21,9 @@ public class TTSHelper {
     private static final int STOP = -1;
     private static final int QUEUE_CAPACITY = 30;
     private volatile static TTSHelper instance;
-    private RKTTS rkTts;
+    private RKTTS rkTts = new RKTTS();
     private int ttsId = STOP;
     private Queue<Node> bufferQueue = new ArrayBlockingQueue<>(QUEUE_CAPACITY);
-
-    private static final String TTS_SERVICE_NAME = "com.rokid.tts.TtsService";
-    private static final String TTS_PACKAGE_NAME = "com.rokid.tts";
-
-    /**
-     * Private constructor, avoid this class wall be instantiated.
-     */
-    private TTSHelper() {
-        rkTts = new RKTTS();
-    }
 
     public static TTSHelper getInstance() {
         if (null == instance) {

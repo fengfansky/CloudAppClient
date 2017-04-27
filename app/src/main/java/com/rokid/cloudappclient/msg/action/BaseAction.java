@@ -12,7 +12,7 @@ public abstract class BaseAction<T extends BaseTransferBean> {
 
     T mTransfer;
 
-    public void setDataSource(T transfer){
+    public synchronized void setDataSource(T transfer) {
         Logger.d("setDataSource transfer == null ? " + String.valueOf(transfer == null));
         if (transfer == null){
             return;
@@ -28,7 +28,7 @@ public abstract class BaseAction<T extends BaseTransferBean> {
 
     public abstract void stopPlay();
 
-    public void notifyPlayFinished(T transfer) {
+    public synchronized void notifyPlayFinished(T transfer) {
         T mediaTemp = (T) MsgContainerManager.getInstance().poll(transfer);
 
         if (null != mediaTemp) {
