@@ -32,7 +32,7 @@ import java.util.Map;
  * Author: xupan.shi
  * Version: V0.1 2017/3/9
  */
-public abstract class BaseActivity extends Activity {
+public abstract class BaseActivity extends Activity implements TTSHelper.TTSCallback {
 
     private static final String KEY_NLP = "nlp";
     private static final String KEY_COMMON_RESPONSE = "extra";
@@ -43,7 +43,7 @@ public abstract class BaseActivity extends Activity {
         Logger.d("RKCloudAppActivity OnCreated");
 
         initViews(savedInstanceState);
-
+        initTTS();
         checkIntent(getIntent());
     }
 
@@ -138,7 +138,7 @@ public abstract class BaseActivity extends Activity {
             return null;
         }
 
-        Logger.d("Intent - Action: ", nlp);
+        Logger.d("parseIntent Nlp ---> ", nlp);
         NLPBean intentObject = new Gson().fromJson(nlp, NLPBean.class);
 
         if (null == intentObject) {
@@ -178,42 +178,63 @@ public abstract class BaseActivity extends Activity {
     }
 
 
+    /**
+     * ------------------TTS START--------------------
+     **/
+    TTSHelper ttsHelper = TTSHelper.getInstance();
+
+    private void initTTS() {
+        ttsHelper.setTTSCallback(this);
+    }
+
+    @Override
+    public void onTTSStart(int id) {
+
+    }
+
+    @Override
+    public void onTTSFinish() {
+        Logger.d("onTTSFinish finish()");
+        StateManager.getInstance().updateVoiceState(StateManager.VoiceState.STOPPED);
+        finish();
+    }
+
     // TODO
     private void speakIntentEmptyErrorTTS() {
-        speakTTS(getResources().getString(R.string.tts_intent_empty_error), true);
+        speakTTSError(getResources().getString(R.string.tts_intent_empty_error));
     }
 
     // TODO
     private void speakNLPEmptyErrorTTS() {
-        speakTTS(getResources().getString(R.string.tts_nlp_empty_error), true);
+        speakTTSError(getResources().getString(R.string.tts_nlp_empty_error));
     }
 
     // TODO
     private void speakNLPDateEmptyErrorTTS() {
-        speakTTS(getResources().getString(R.string.tts_nlp_data_empty_error), true);
+        speakTTSError(getResources().getString(R.string.tts_nlp_data_empty_error));
     }
 
     // TODO
     private void speakNLPInvalidErrorTTS() {
-        speakTTS(getResources().getString(R.string.tts_nlp_invalid_error), true);
+        speakTTSError(getResources().getString(R.string.tts_nlp_invalid_error));
     }
 
     // TODO
-    private void speakTTS(String ttsContent, final boolean shouldFinish) {
-        TTSHelper.getInstance().speakTTS(ttsContent, new TTSHelper.TTSCallback() {
+    private void speakTTSError(String ttsContent) {
+        ttsHelper.speakTTSError(ttsContent, new TTSHelper.TTSErrorCallback() {
             @Override
-            public void onStart(int id) {
+            public void onTTSStart(int id) {
             }
 
             @Override
             public void onTTSFinish() {
                 // TODO
-                if (shouldFinish) {
-                    finish();
-                }
+                finish();
             }
         });
     }
+
+    /** ------------------TTS END--------------------- **/
 
     private void updateCurrentApplicationInfo(final RealAction realAction) {
         Logger.d("updateCurrentApplicationInfo");

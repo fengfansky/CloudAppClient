@@ -37,20 +37,7 @@ public class VoiceAction extends BaseAction<TransferVoiceBean> {
         }
 
         StateManager.getInstance().updateVoiceState(StateManager.VoiceState.PLAYING);
-        int ttsId = TTSHelper.getInstance().speakTTS(ttsContent,
-                new TTSHelper.TTSCallback() {
-                    @Override
-                    public void onStart(int id) {
-                        mTransfer.setTtsId(id);
-                    }
-
-                    @Override
-                    public void onTTSFinish() {
-                        Logger.d("Voice is completed!!!");
-                        StateManager.getInstance().updateVoiceState(StateManager.VoiceState.STOPPED);
-
-                    }
-                });
+        int ttsId = TTSHelper.getInstance().speakTTS(ttsContent);
         mTransfer.setTtsId(ttsId);
     }
 

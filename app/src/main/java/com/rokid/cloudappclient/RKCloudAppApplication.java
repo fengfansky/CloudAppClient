@@ -31,9 +31,6 @@ public class RKCloudAppApplication extends Application {
         super.onCreate();
         instance = this;
 
-        // Start to Binding Remote TTS Service
-//        TTSHelper.getInstance().bindTTSService();
-
         // Initialize the thread pool.
         initThreadPoolExecute();
 
