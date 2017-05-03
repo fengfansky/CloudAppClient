@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:rokid="http:www.rokid-inc.com" rokid:version="1.0.0">
+    <application rokid:isSystem="false">
+        <scene rokid:activity=".MainActivity" rokid:appID="841f3558-f3d4-43f6-911a-6f80b62b352d" />
+    </application>
+</manifest>
