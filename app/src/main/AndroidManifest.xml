@@ -3,7 +3,7 @@
     package="com.rokid.cloudappclient">
 
     <application
-        android:name=".RKCloudAppApplication"
+        android:name="com.rokid.cloudappclient.RKCloudAppApplication"
         android:allowBackup="true">
         <activity android:name="com.rokid.cloudappclient.activity.CloudActivity">
             <intent-filter>
