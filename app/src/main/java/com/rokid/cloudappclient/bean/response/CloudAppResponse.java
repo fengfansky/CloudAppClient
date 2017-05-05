@@ -11,9 +11,18 @@ import com.rokid.cloudappclient.bean.response.responseinfo.ResponseBean;
  */
 public class CloudAppResponse {
 
+    private String appId;
     private String version;
     private SessionBean session;
     private ResponseBean response;
+
+    public String getAppId() {
+        return appId;
+    }
+
+    public void setAppId(String appId) {
+        this.appId = appId;
+    }
 
     public String getVersion() {
         return version;

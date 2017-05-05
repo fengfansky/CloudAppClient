@@ -10,9 +10,9 @@ import java.util.Map;
 public class NLPBean {
 
     /**
-     * intent domain
+     * intent appId
      */
-    private String domain;
+    private String appId;
     /**
      * intent
      */
@@ -64,11 +64,12 @@ public class NLPBean {
     private boolean cloud;
 
 
-    public String getDomain() {
-        return domain;
+    public String getAppId() {
+        return appId;
     }
-    public void setDomain(String domain) {
-        this.domain = domain;
+
+    public void setAppId(String appId) {
+        this.appId = appId;
     }
     public String getIntent() {
         return intent;

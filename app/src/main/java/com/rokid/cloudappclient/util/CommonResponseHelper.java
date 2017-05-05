@@ -35,7 +35,7 @@ public class CommonResponseHelper {
         }
 
         // check response domain
-        if (TextUtils.isEmpty(action.getResponse().getDomain())) {
+        if (TextUtils.isEmpty(action.getAppId())) {
             Logger.i("checkCloudAppAction: domain for response is invalid");
             return false;
         }
@@ -125,7 +125,7 @@ public class CommonResponseHelper {
         }
 
         realAction.setValid(true);
-        realAction.setDomain(cloudAppResponse.getResponse().getDomain());
+        realAction.setDomain(cloudAppResponse.getAppId());
         realAction.setActionType(cloudAppResponse.getResponse().getAction().getType());
         realAction.setAsr(commonResponse.getAsr());
         realAction.setNlp(commonResponse.getNlp());

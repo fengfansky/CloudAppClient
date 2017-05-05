@@ -28,11 +28,6 @@ public class ResponseBean {
     private String resType;
 
     /**
-     * the application domain for the current response
-     */
-    private String domain;
-
-    /**
      * indicates the application type for the domain related
      * SCENE or CUT
      */
@@ -55,14 +50,6 @@ public class ResponseBean {
 
     public void setResType(String resType) {
         this.resType = resType;
-    }
-
-    public String getDomain() {
-        return domain;
-    }
-
-    public void setDomain(String domain) {
-        this.domain = domain;
     }
 
     public String getShot() {
@@ -91,10 +78,6 @@ public class ResponseBean {
 
     public boolean isResTypeValid() {
         return !TextUtils.isEmpty(resType) && (TYPE_INTENT.equals(resType) || TYPE_EVENT.equals(resType));
-    }
-
-    public boolean isDomainValid() {
-        return !TextUtils.isEmpty(domain);
     }
 
     public boolean isShotValid() {
