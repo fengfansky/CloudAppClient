@@ -41,7 +41,7 @@ public class CommonResponseHelper {
         }
 
         // check response shot
-        String shot = action.getResponse().getShot();
+        String shot = action.getResponse().getForm();
 
         if (TextUtils.isEmpty(shot)) {
             Logger.i("checkCloudAppAction: shot for response is invalid");
@@ -131,7 +131,7 @@ public class CommonResponseHelper {
         realAction.setNlp(commonResponse.getNlp());
         realAction.setRespId(cloudAppResponse.getResponse().getRespId());
         realAction.setResType(cloudAppResponse.getResponse().getResType());
-        realAction.setShot(cloudAppResponse.getResponse().getShot());
+        realAction.setShot(cloudAppResponse.getResponse().getForm());
         realAction.setShouldEndSession(cloudAppResponse.getResponse().getAction().isShouldEndSession());
         realAction.setVoice(cloudAppResponse.getResponse().getAction().getVoice());
         realAction.setMedia(cloudAppResponse.getResponse().getAction().getMedia());
