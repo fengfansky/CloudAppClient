@@ -4,7 +4,7 @@ import com.rokid.cloudappclient.bean.response.responseinfo.action.voice.VoiceIte
 import com.rokid.cloudappclient.bean.transfer.TransferVoiceBean;
 import com.rokid.cloudappclient.msg.manager.StateManager;
 import com.rokid.cloudappclient.util.Logger;
-import com.rokid.cloudappclient.util.TTSHelper;
+import com.rokid.cloudappclient.tts.TTSHelper;
 
 public class VoiceAction extends BaseAction<TransferVoiceBean> {
 

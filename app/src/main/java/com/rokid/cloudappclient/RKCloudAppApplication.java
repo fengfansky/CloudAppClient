@@ -2,9 +2,6 @@ package com.rokid.cloudappclient;
 
 import android.app.Application;
 
-import com.rokid.cloudappclient.util.Logger;
-import com.rokid.cloudappclient.util.TTSHelper;
-
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;

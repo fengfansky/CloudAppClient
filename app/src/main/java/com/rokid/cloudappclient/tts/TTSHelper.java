@@ -1,4 +1,4 @@
-package com.rokid.cloudappclient.util;
+package com.rokid.cloudappclient.tts;
 
 import android.os.RemoteException;
 import android.text.TextUtils;
@@ -6,6 +6,8 @@ import android.text.TextUtils;
 import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
 
+import com.rokid.cloudappclient.util.Logger;
+import com.rokid.cloudappclient.util.WidgetUtils;
 import rokid.os.RKTTS;
 import rokid.os.RKTTSCallback;
 
