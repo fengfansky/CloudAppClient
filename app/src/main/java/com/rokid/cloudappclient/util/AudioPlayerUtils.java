@@ -1,6 +1,9 @@
 package com.rokid.cloudappclient.util;
 
 import com.rokid.cloudappclient.RKCloudAppApplication;
+import com.rokid.cloudappclient.reporter.BaseReporter;
+import com.rokid.cloudappclient.reporter.MediaReporter;
+import com.rokid.cloudappclient.reporter.ReporterManager;
 import com.rokid.rkaudioplayer.RKAudioPlayerManger;
 import com.rokid.rkaudioplayer.controller.RKAudioPlayer;
 import com.rokid.rkaudioplayer.controller.callback.IRKAudioPlayerListener;
@@ -23,18 +26,21 @@ public class AudioPlayerUtils {
             public void onMusicStarted(RKAudioState rkAudioState) {
                 Logger.d("RKAudioPlayer is onStart");
                 //callback.onMusicStarted(rkAudioState);
+                sendReport(MediaReporter.START);
             }
 
             @Override
             public void onMusicFinished(RKAudioState rkAudioState) {
                 Logger.d("RKAudioPlayer is onMusicFinished");
                 callback.onMusicFinished(rkAudioState);
+                sendReport(MediaReporter.FINISHED);
             }
 
             @Override
             public void onMusicNearFinishEd(RKAudioState rkAudioState) {
                 Logger.d("RKAudioPlayer is onMusicNearFinishEd");
                 callback.onMusicNearFinishEd(rkAudioState);
+                sendReport(MediaReporter.NEAR_FINISH);
             }
 
             @Override
@@ -47,6 +53,7 @@ public class AudioPlayerUtils {
             public void onMusicPaused(RKAudioState rkAudioState) {
                 Logger.d("RKAudioPlayer is onMusicPaused");
                 callback.onMusicPaused(rkAudioState);
+                sendReport(MediaReporter.PAUSED);
             }
 
             @Override
@@ -98,6 +105,14 @@ public class AudioPlayerUtils {
             }
         });
 
+    }
+
+    private static void sendReport(String content) {
+        BaseReporter reporter = new MediaReporter();
+        reporter.setEvent(content);
+        //TODO setExtra
+        reporter.setExtra(content);
+        ReporterManager.getInstance().executeReporter(reporter);
     }
 
     private static RKAudioPlayer playAudio(String domain, MediaBean mediaBean,

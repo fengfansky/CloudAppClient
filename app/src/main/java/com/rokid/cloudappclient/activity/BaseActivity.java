@@ -6,6 +6,9 @@ import android.os.Bundle;
 import com.rokid.cloudappclient.R;
 import com.rokid.cloudappclient.msg.manager.StateManager;
 import com.rokid.cloudappclient.parser.IntentParser;
+import com.rokid.cloudappclient.reporter.BaseReporter;
+import com.rokid.cloudappclient.reporter.ReporterManager;
+import com.rokid.cloudappclient.reporter.VoiceReporter;
 import com.rokid.cloudappclient.util.Logger;
 import com.rokid.cloudappclient.tts.TTSHelper;
 import com.rokid.cloudappclient.tts.TTSSpeakInterface;
@@ -24,13 +27,18 @@ public abstract class BaseActivity extends Activity implements TTSHelper.TTSCall
 
     private WeakReference<IntentParser> parserWeakReference = new WeakReference<>(new IntentParser(this));
 
+    ReporterManager reporterManager;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Logger.d("RKCloudAppActivity OnCreated");
 
         initViews(savedInstanceState);
-        initTTS();
+        //TODO test
+
+//        initTTS();
+        reporterManager = ReporterManager.getInstance();
         parserWeakReference.get().startParse(getIntent());
     }
 
@@ -98,13 +106,14 @@ public abstract class BaseActivity extends Activity implements TTSHelper.TTSCall
 
     @Override
     public void onTTSStart(int id) {
-
+        sendReport(VoiceReporter.START);
     }
 
     @Override
     public void onTTSFinish() {
         Logger.d("onTTSFinish finish()");
         StateManager.getInstance().updateVoiceState(StateManager.VoiceState.STOPPED);
+        sendReport(VoiceReporter.FINISHED);
         finish();
     }
 
@@ -157,5 +166,11 @@ public abstract class BaseActivity extends Activity implements TTSHelper.TTSCall
     protected abstract void initViews(Bundle savedInstanceState);
 
 
-
+    private static void sendReport(String action) {
+        BaseReporter reporter = new VoiceReporter();
+        reporter.setEvent(action);
+        //TODO setExtra
+        reporter.setExtra(action);
+        ReporterManager.getInstance().executeReporter(reporter);
+    }
 }

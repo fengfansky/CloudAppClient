@@ -3,7 +3,7 @@ package com.rokid.cloudappclient.msg.manager;
 import android.text.TextUtils;
 
 import com.rokid.cloudappclient.bean.base.BaseTransferBean;
-import com.rokid.cloudappclient.bean.response.responseinfo.ResponseBean;
+import com.rokid.cloudappclient.bean.response.responseinfo.action.ActionBean;
 import com.rokid.cloudappclient.msg.queue.IMsgQueue;
 import com.rokid.cloudappclient.util.Logger;
 
@@ -49,14 +49,14 @@ public class MsgContainerManager implements IMsgQueue {
         MsgContainer msgContainer;
 
         switch (transferBean.getShot()) {
-            case ResponseBean.SHOT_SCENE:
+            case ActionBean.FORM_SCENE:
                 if (null == sceneContainer || !transferBean.getDomain().equals(sceneContainer.domain)) {
                     sceneContainer = new MsgContainer(transferBean.getDomain());
                 }
                 msgContainer = sceneContainer;
                 msgContainer.push(transferBean);
                 break;
-            case ResponseBean.SHOT_CUT:
+            case ActionBean.FORM_CUT:
                 if (null == cutContainer || !transferBean.getDomain().equals(cutContainer.domain)) {
                     cutContainer = new MsgContainer(transferBean.getDomain());
                 }
@@ -84,11 +84,11 @@ public class MsgContainerManager implements IMsgQueue {
 
         Logger.d(String.format("pollVoice - %1$s %2$s", domain, shot));
         switch (shot) {
-            case ResponseBean.SHOT_SCENE:
+            case ActionBean.FORM_SCENE:
                 if (null != sceneContainer && sceneContainer.domain.equals(domain)) {
                     return sceneContainer.poll(transferBean);
                 }
-            case ResponseBean.SHOT_CUT:
+            case ActionBean.FORM_CUT:
                 if (null != cutContainer && cutContainer.domain.equals(domain)) {
                     return cutContainer.poll(transferBean);
                 }
@@ -112,12 +112,12 @@ public class MsgContainerManager implements IMsgQueue {
 
         Logger.d(String.format("clearMedia - %1$s %2$s", domain, shot));
         switch (shot) {
-            case ResponseBean.SHOT_SCENE:
+            case ActionBean.FORM_SCENE:
                 if (null != sceneContainer && sceneContainer.domain.equals(domain)) {
                     sceneContainer.clear();
                 }
                 break;
-            case ResponseBean.SHOT_CUT:
+            case ActionBean.FORM_CUT:
                 if (null != cutContainer && cutContainer.domain.equals(domain)) {
                     cutContainer.clear();
                 }

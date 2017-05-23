@@ -2,7 +2,7 @@ package com.rokid.cloudappclient.bean.base;
 
 import android.text.TextUtils;
 
-import com.rokid.cloudappclient.bean.response.responseinfo.ResponseBean;
+import com.rokid.cloudappclient.bean.response.responseinfo.action.ActionBean;
 
 /**
  * Description: TODO
@@ -36,7 +36,7 @@ public abstract class BaseTransferBean extends BaseBean {
 
     public boolean isShotValid() {
         return !TextUtils.isEmpty(shot)
-                && (ResponseBean.SHOT_SCENE.equals(shot) || ResponseBean.SHOT_CUT.equals(shot));
+                && (ActionBean.FORM_SCENE.equals(shot) || ActionBean.FORM_CUT.equals(shot));
     }
 
 }

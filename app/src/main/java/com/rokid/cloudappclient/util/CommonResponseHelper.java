@@ -41,15 +41,15 @@ public class CommonResponseHelper {
         }
 
         // check response shot
-        String shot = action.getResponse().getForm();
+        String shot = action.getResponse().getAction().getForm();
 
         if (TextUtils.isEmpty(shot)) {
-            Logger.i("checkCloudAppAction: shot for response is invalid");
+            Logger.i("checkCloudAppAction: form for response is invalid");
             return false;
         }
 
-        if (!shot.equals(ResponseBean.SHOT_CUT)
-                && !shot.equals(ResponseBean.SHOT_SCENE)) {
+        if (!shot.equals(ActionBean.FORM_CUT)
+                && !shot.equals(ActionBean.FORM_SCENE)) {
             Logger.i("checkCloudAppAction: ignore for unknown shot type: " + shot);
             return false;
         }
@@ -131,7 +131,7 @@ public class CommonResponseHelper {
         realAction.setNlp(commonResponse.getNlp());
         realAction.setRespId(cloudAppResponse.getResponse().getRespId());
         realAction.setResType(cloudAppResponse.getResponse().getResType());
-        realAction.setShot(cloudAppResponse.getResponse().getForm());
+        realAction.setShot(cloudAppResponse.getResponse().getAction().getForm());
         realAction.setShouldEndSession(cloudAppResponse.getResponse().getAction().isShouldEndSession());
         realAction.setVoice(cloudAppResponse.getResponse().getAction().getVoice());
         realAction.setMedia(cloudAppResponse.getResponse().getAction().getMedia());

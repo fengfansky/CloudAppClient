@@ -13,25 +13,16 @@ import com.rokid.cloudappclient.bean.base.BaseBean;
 public class VoiceBean extends BaseBean {
 
     /**
-     * Current voice interaction will be appended to the end of the execution queue.
-     * And the voice interaction will not be executed until all of the previous voice interactions finish execution.
+     * APPEND - 仅将当前voice加入队列，对当前正在执行的voice和队列已有的voice没有任何影响。
+     * REPLACE_ALL - 会将当前正在执行的voice停止，将队列中已有的voice清除，再将当前新的voice加入队列并立
+     * 即执行。
+     * REPLACE_APPEND - 会将当前正在执行的voice停止，但不会清除队列中已有的voice，将新的voice加入队列     * ，并执行队列。
+     * CLEAR - 会立即停止当前所有的voice任务，此策略等同于退出voice，此时voice中的item内容将会被忽略。
+
      */
     public static final String BEHAVIOUR_APPEND = "APPEND";
-    /**
-     * current voice interaction will be executed immediately.
-     * Currently executing voice interaction will be shut down and all of the previous voice interactions in queue will be cleared.
-     */
     public static final String BEHAVIOUR_REPLACE_ALL = "REPLACE_ALL";
-    /**
-     * Current voice interaction will be appended to the end of the execution queue.
-     * And currently executing voice interaction will be shut down immediately.
-     */
     public static final String BEHAVIOUR_REPLACE_APPEND = "REPLACE_APPEND";
-    /**
-     * Currently executing voice interaction will be shut down immediately.
-     * And meanwhile, the execution queue will be cleared.
-     * In addition, current voice interaction in response will NOT be executed and duraton and item will NOT be in effect as well.
-     */
     public static final String BEHAVIOUR_CLEAR = "CLEAR";
 
     private boolean needEventCallback;

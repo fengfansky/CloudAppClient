@@ -18,7 +18,6 @@ import rokid.os.RKTTSCallback;
  * Version: V0.1 2017/3/10
  */
 public class TTSHelper {
-
     private static final int WAIT = -2;
     private static final int STOP = -1;
     private static final int QUEUE_CAPACITY = 30;

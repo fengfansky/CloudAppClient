@@ -8,37 +8,17 @@ package com.rokid.cloudappclient.bean.request.context.device;
  */
 public class DeviceBean {
 
-    private String deviceId;
-    private String deviceType;
-    private String vendor;
+    private BasicBean basic;
     private ScreenBean screen;
-    private String locale;
-    private long timestamp;
     private MediaBean media;
     private LocationBean location;
 
-    public String getDeviceId() {
-        return deviceId;
+    public BasicBean getBasic() {
+        return basic;
     }
 
-    public void setDeviceId(String deviceId) {
-        this.deviceId = deviceId;
-    }
-
-    public String getDeviceType() {
-        return deviceType;
-    }
-
-    public void setDeviceType(String deviceType) {
-        this.deviceType = deviceType;
-    }
-
-    public String getVendor() {
-        return vendor;
-    }
-
-    public void setVendor(String vendor) {
-        this.vendor = vendor;
+    public void setBasic(BasicBean basic) {
+        this.basic = basic;
     }
 
     public ScreenBean getScreen() {
@@ -47,22 +27,6 @@ public class DeviceBean {
 
     public void setScreen(ScreenBean screen) {
         this.screen = screen;
-    }
-
-    public String getLocale() {
-        return locale;
-    }
-
-    public void setLocale(String locale) {
-        this.locale = locale;
-    }
-
-    public long getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(long timestamp) {
-        this.timestamp = timestamp;
     }
 
     public MediaBean getMedia() {

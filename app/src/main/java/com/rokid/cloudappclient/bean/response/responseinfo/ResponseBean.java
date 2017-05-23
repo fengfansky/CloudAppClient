@@ -18,23 +18,15 @@ public class ResponseBean {
     public static final String TYPE_INTENT = "INTENT";
     public static final String TYPE_EVENT = "EVENT";
 
-    public static final String SHOT_SCENE = "SCENE";
-    public static final String SHOT_CUT = "CUT";
-
     private String respId;
     /**
      * ONLY type INTENT and EVENT are available currently
      */
     private String resType;
 
-    /**
-     * indicates the application type for the domain related
-     * SCENE or CUT
-     */
-    private String form;
-
     private CardBean card;
     private ActionBean action;
+
 
     public String getRespId() {
         return respId;
@@ -52,13 +44,6 @@ public class ResponseBean {
         this.resType = resType;
     }
 
-    public String getForm() {
-        return form;
-    }
-
-    public void setForm(String form) {
-        this.form = form;
-    }
 
     public CardBean getCard() {
         return card;
@@ -80,8 +65,5 @@ public class ResponseBean {
         return !TextUtils.isEmpty(resType) && (TYPE_INTENT.equals(resType) || TYPE_EVENT.equals(resType));
     }
 
-    public boolean isShotValid() {
-        return !TextUtils.isEmpty(form) && (SHOT_SCENE.equals(form) || SHOT_CUT.equals(form));
-    }
 
 }

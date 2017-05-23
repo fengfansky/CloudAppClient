@@ -1,5 +1,7 @@
 package com.rokid.cloudappclient.bean.request.session;
 
+import java.util.Map;
+
 /**
  * Session indicates the session for the CloudApp that currently be requested.
  * Whenever a request is created, the session information will be updated by system.
@@ -15,11 +17,10 @@ public class SessionBean<T> {
      */
     private boolean newSession;
     private String applicationId;
-    private String domain;
     /**
      * session attributes set by CloudApp in Response
      */
-    private T attributes;
+    private Map<String, String> attributes;
 
     public String getSessionId() {
         return sessionId;
@@ -45,20 +46,11 @@ public class SessionBean<T> {
         this.applicationId = applicationId;
     }
 
-    public String getDomain() {
-        return domain;
-    }
-
-    public void setDomain(String domain) {
-        this.domain = domain;
-    }
-
-    public T getAttributes() {
+    public Map<String, String> getAttributes() {
         return attributes;
     }
 
-    public void setAttributes(T attributes) {
+    public void setAttributes(Map<String, String> attributes) {
         this.attributes = attributes;
     }
-
 }

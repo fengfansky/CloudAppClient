@@ -5,6 +5,7 @@ import android.text.TextUtils;
 
 import com.google.gson.Gson;
 import com.rokid.cloudappclient.bean.CommonResponse;
+import com.rokid.cloudappclient.bean.DeviceInfoBean;
 import com.rokid.cloudappclient.bean.NLPBean;
 import com.rokid.cloudappclient.bean.RealAction;
 import com.rokid.cloudappclient.bean.base.BaseTransferBean;
@@ -17,6 +18,7 @@ import com.rokid.cloudappclient.msg.action.VoiceAction;
 import com.rokid.cloudappclient.msg.manager.MsgContainerManager;
 import com.rokid.cloudappclient.msg.manager.StateManager;
 import com.rokid.cloudappclient.util.CommonResponseHelper;
+import com.rokid.cloudappclient.util.DeviceInfoUtil;
 import com.rokid.cloudappclient.util.Logger;
 import com.rokid.cloudappclient.tts.TTSSpeakInterface;
 
@@ -30,6 +32,7 @@ public class IntentParser {
 
     private static final String KEY_NLP = "nlp";
     private static final String KEY_COMMON_RESPONSE = "extra";
+    private static final String KEY_DEVICE_INFO = "device";
 
     TTSSpeakInterface ttsSpeakInterface;
 
@@ -82,20 +85,35 @@ public class IntentParser {
         }
 
         Logger.d("parseIntent Nlp ---> ", nlp);
-        NLPBean intentObject = new Gson().fromJson(nlp, NLPBean.class);
+        NLPBean nlpBean = new Gson().fromJson(nlp, NLPBean.class);
 
-        if (null == intentObject) {
+        if (null == nlpBean) {
             Logger.d("NLPData is empty!!!");
             ttsSpeakInterface.speakNLPDateEmptyErrorTTS();
             return null;
         }
 
-        Map<String, String> slots = intentObject.getSlots();
+        Map<String, String> slots = nlpBean.getSlots();
 
         if (slots == null || slots.isEmpty()) {
             Logger.i("NLP slots is invalid");
             return null;
         }
+
+        if (!slots.containsKey(KEY_DEVICE_INFO)) {
+            Logger.i("NLP slots has no DEVICE_INFO");
+            return null;
+        }
+
+        String deviceInfo = slots.get(KEY_DEVICE_INFO);
+
+        Logger.d("device Info : " + deviceInfo);
+
+        DeviceInfoBean deviceInfoBean = null;
+
+        deviceInfoBean = new Gson().fromJson(deviceInfo, DeviceInfoBean.class);
+
+        DeviceInfoUtil.setDeviceInfoBean(deviceInfoBean);
 
         if (!slots.containsKey(KEY_COMMON_RESPONSE)) {
             Logger.i("NLP slots has no COMMON_RESPONSE info");
@@ -159,7 +177,7 @@ public class IntentParser {
         if (!TextUtils.isEmpty(actionType) && ActionBean.TYPE_EXIT.equals(actionType)) {
             Logger.d("current response is a INTENT EXIT - Finish Activity");
             ttsSpeakInterface.finishActivity();
-        } else if (ResponseBean.TYPE_INTENT.equals(responseType) && ResponseBean.SHOT_CUT.equals(shot)) {
+        } else if (ResponseBean.TYPE_INTENT.equals(responseType) && ActionBean.FORM_CUT.equals(shot)) {
             // when the response type is INTENT and the application shot is CUT, current action should be
             // stopped and the queue of cut should be cleared.
 

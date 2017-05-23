@@ -2,11 +2,11 @@ package com.rokid.cloudappclient.msg.manager;
 
 import android.text.TextUtils;
 
-import com.rokid.cloudappclient.bean.response.responseinfo.ResponseBean;
+import com.rokid.cloudappclient.bean.response.responseinfo.action.ActionBean;
 import com.rokid.cloudappclient.util.Logger;
 
 /**
- * Created by showingcp on 3/14/17.
+ * Updated by fengfan on 5/18/17.
  * <p>
  * StateManager is a singleton class to manage the state for application, voice and media.
  * All the operations for the state should be handled here. All the operations are volatile.
@@ -98,7 +98,7 @@ public class StateManager {
             return;
         }
 
-        if (!ResponseBean.SHOT_CUT.equals(shot) && !ResponseBean.SHOT_SCENE.equals(shot)) {
+        if (!ActionBean.FORM_CUT.equals(shot) && !ActionBean.FORM_SCENE.equals(shot)) {
             Logger.e("current app shot is unknown");
             return;
         }
@@ -152,9 +152,9 @@ public class StateManager {
     private int getAppState(String shot) {
         int appState = -1;
         synchronized (mLock) {
-            if (ResponseBean.SHOT_CUT.equals(shot)) {
+            if (ActionBean.FORM_CUT.equals(shot)) {
                 appState = mCutStateNode.mAppState;
-            } else if (ResponseBean.SHOT_SCENE.equals(shot)) {
+            } else if (ActionBean.FORM_SCENE.equals(shot)) {
                 appState = mSceneStateNode.mAppState;
             }
         }
@@ -185,9 +185,9 @@ public class StateManager {
         }
 
         synchronized (mLock) {
-            if (ResponseBean.SHOT_CUT.equals(shot)) {
+            if (ActionBean.FORM_CUT.equals(shot)) {
                 mCutStateNode.mAppState = appState;
-            } else if (ResponseBean.SHOT_SCENE.equals(shot)) {
+            } else if (ActionBean.FORM_SCENE.equals(shot)) {
                 mSceneStateNode.mAppState = appState;
             }
         }
@@ -207,9 +207,9 @@ public class StateManager {
     private int getVoiceState(String shot) {
         int voiceState = -1;
         synchronized (mLock) {
-            if (ResponseBean.SHOT_CUT.equals(shot)) {
+            if (ActionBean.FORM_CUT.equals(shot)) {
                 voiceState = mCutStateNode.mVoiceState;
-            } else if (ResponseBean.SHOT_SCENE.equals(shot)) {
+            } else if (ActionBean.FORM_SCENE.equals(shot)) {
                 voiceState = mSceneStateNode.mVoiceState;
             }
         }
@@ -240,10 +240,10 @@ public class StateManager {
         }
 
         synchronized (mLock) {
-            if (ResponseBean.SHOT_CUT.equals(shot)) {
+            if (ActionBean.FORM_CUT.equals(shot)) {
                 mCutStateNode.mVoiceState = voiceState;
                 Logger.i("VOICE state updated: " + mCutStateNode.mVoiceState + ", for SHOT: " + shot);
-            } else if (ResponseBean.SHOT_SCENE.equals(shot)) {
+            } else if (ActionBean.FORM_SCENE.equals(shot)) {
                 mSceneStateNode.mVoiceState = voiceState;
                 Logger.i("VOICE state updated: " + mSceneStateNode.mVoiceState + ", for SHOT: " + shot);
             }
@@ -263,9 +263,9 @@ public class StateManager {
     private int getMediaState(String shot) {
         int mediaState = -1;
         synchronized (mLock) {
-            if (ResponseBean.SHOT_CUT.equals(shot)) {
+            if (ActionBean.FORM_CUT.equals(shot)) {
                 mediaState = mCutStateNode.mMediaState;
-            } else if (ResponseBean.SHOT_SCENE.equals(shot)) {
+            } else if (ActionBean.FORM_SCENE.equals(shot)) {
                 mediaState = mSceneStateNode.mMediaState;
             }
         }
@@ -291,10 +291,10 @@ public class StateManager {
         }
 
         synchronized (mLock) {
-            if (ResponseBean.SHOT_CUT.equals(shot)) {
+            if (ActionBean.FORM_CUT.equals(shot)) {
                 mCutStateNode.mMediaState = mediaState;
                 Logger.i("MEDIA state updated: " + mCutStateNode.mMediaState + ", for SHOT: " + shot);
-            } else if (ResponseBean.SHOT_SCENE.equals(shot)) {
+            } else if (ActionBean.FORM_SCENE.equals(shot)) {
                 mSceneStateNode.mMediaState = mediaState;
                 Logger.i("MEDIA state updated: " + mSceneStateNode.mMediaState + ", for SHOT: " + shot);
             }
@@ -315,9 +315,9 @@ public class StateManager {
         }
 
         synchronized (mLock) {
-            if (ResponseBean.SHOT_CUT.equals(shot)) {
+            if (ActionBean.FORM_CUT.equals(shot)) {
                 mCutStateNode.storeLastAppState();
-            } else if (ResponseBean.SHOT_SCENE.equals(shot)) {
+            } else if (ActionBean.FORM_SCENE.equals(shot)) {
                 mSceneStateNode.storeLastAppState();
             }
         }
@@ -337,9 +337,9 @@ public class StateManager {
         }
 
         synchronized (mLock) {
-            if (ResponseBean.SHOT_CUT.equals(shot)) {
+            if (ActionBean.FORM_CUT.equals(shot)) {
                 mCutStateNode.restoreLastAppState();
-            } else if (ResponseBean.SHOT_SCENE.equals(shot)) {
+            } else if (ActionBean.FORM_SCENE.equals(shot)) {
                 mSceneStateNode.restoreLastAppState();
             }
         }
@@ -359,9 +359,9 @@ public class StateManager {
         }
 
         synchronized (mLock) {
-            if (ResponseBean.SHOT_CUT.equals(shot)) {
+            if (ActionBean.FORM_CUT.equals(shot)) {
                 mCutStateNode.storeLastVoiceState();
-            } else if (ResponseBean.SHOT_SCENE.equals(shot)) {
+            } else if (ActionBean.FORM_SCENE.equals(shot)) {
                 mSceneStateNode.storeLastVoiceState();
             }
         }
@@ -381,9 +381,9 @@ public class StateManager {
         }
 
         synchronized (mLock) {
-            if (ResponseBean.SHOT_CUT.equals(shot)) {
+            if (ActionBean.FORM_CUT.equals(shot)) {
                 mCutStateNode.restoreLastVoiceState();
-            } else if (ResponseBean.SHOT_SCENE.equals(shot)) {
+            } else if (ActionBean.FORM_SCENE.equals(shot)) {
                 mSceneStateNode.restoreLastVoiceState();
             }
         }
@@ -403,9 +403,9 @@ public class StateManager {
         }
 
         synchronized (mLock) {
-            if (ResponseBean.SHOT_CUT.equals(shot)) {
+            if (ActionBean.FORM_CUT.equals(shot)) {
                 mCutStateNode.storeLastMediaState();
-            } else if (ResponseBean.SHOT_SCENE.equals(shot)) {
+            } else if (ActionBean.FORM_SCENE.equals(shot)) {
                 mSceneStateNode.storeLastMediaState();
             }
         }
@@ -425,9 +425,9 @@ public class StateManager {
         }
 
         synchronized (mLock) {
-            if (ResponseBean.SHOT_CUT.equals(shot)) {
+            if (ActionBean.FORM_CUT.equals(shot)) {
                 mCutStateNode.restoreLastMediaState();
-            } else if (ResponseBean.SHOT_SCENE.equals(shot)) {
+            } else if (ActionBean.FORM_SCENE.equals(shot)) {
                 mSceneStateNode.restoreLastMediaState();
             }
         }
@@ -451,9 +451,9 @@ public class StateManager {
         }
 
         synchronized (mLock) {
-            if (ResponseBean.SHOT_CUT.equals(shot)) {
+            if (ActionBean.FORM_CUT.equals(shot)) {
                 appState = mCutStateNode.mLastAppState;
-            } else if (ResponseBean.SHOT_SCENE.equals(shot)) {
+            } else if (ActionBean.FORM_SCENE.equals(shot)) {
                 appState = mSceneStateNode.mLastAppState;
             }
         }
@@ -480,9 +480,9 @@ public class StateManager {
         }
 
         synchronized (mLock) {
-            if (ResponseBean.SHOT_CUT.equals(shot)) {
+            if (ActionBean.FORM_CUT.equals(shot)) {
                 voiceState = mCutStateNode.mLastVoiceState;
-            } else if (ResponseBean.SHOT_SCENE.equals(shot)) {
+            } else if (ActionBean.FORM_SCENE.equals(shot)) {
                 voiceState = mSceneStateNode.mLastVoiceState;
             }
         }
@@ -509,9 +509,9 @@ public class StateManager {
         }
 
         synchronized (mLock) {
-            if (ResponseBean.SHOT_CUT.equals(shot)) {
+            if (ActionBean.FORM_CUT.equals(shot)) {
                 mediaState = mCutStateNode.mLastMediaState;
-            } else if (ResponseBean.SHOT_SCENE.equals(shot)) {
+            } else if (ActionBean.FORM_SCENE.equals(shot)) {
                 mediaState = mSceneStateNode.mLastMediaState;
             }
         }

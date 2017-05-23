@@ -27,19 +27,37 @@ public class ActionBean {
      */
     public static final String TYPE_EXIT = "EXIT";
 
+    public static final String FORM_SCENE = "SCENE";
+    public static final String FORM_CUT = "CUT";
+
+    /**
+     * 表明 action 协议版本，当前版本为: 2.0.0.
+     */
     private String version;
     /**
-     * Indicates the type of current action
+     * 前action的类型：NORMAL 或 EXIT。 当 type 是 NORMAL 时，voice 和 media 会同时执行；当 type      * 是 EXIT 时，action会立即退出，并且在这种情况下，voice 和 media 将会被会被忽略
      */
     private String type;
     /**
-     * Notifies CloudDispatcher and CloudAppClient to clear session for current CloudApp.
-     * In addition, when shouldEndSession is true, EventRequests will be ignored
+     * 表明当此次返回的action执行完后 CloudAppClient 是否要退出，同时，当 shouldEndSession 为 true     * 时，CloudAppClient 将会忽略 EventRequests，即在action执行过程中不会产生 EventRequest。
      */
     private boolean shouldEndSession;
     private VoiceBean voice;
     private DisplayBean display;
     private MediaBean media;
+
+    /**
+     * 当前action的展现形式：scene、cut、service。scene的action会在被打断后压栈，cut的action会在被打    * 断后直接结束，service会在后台执行，但没有任何界面。该字段在技能创建时被确定，无法由cloud app更改。
+     */
+    private String form;
+
+    public String getForm() {
+        return form;
+    }
+
+    public void setForm(String form) {
+        this.form = form;
+    }
 
     public String getVersion() {
         return version;
@@ -105,4 +123,7 @@ public class ActionBean {
         return null != display && display.isValid();
     }
 
+    public boolean isShotValid() {
+        return !TextUtils.isEmpty(form) && (FORM_SCENE.equals(form) || FORM_CUT.equals(form));
+    }
 }
