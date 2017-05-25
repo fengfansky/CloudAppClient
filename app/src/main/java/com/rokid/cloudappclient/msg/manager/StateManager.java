@@ -92,7 +92,7 @@ public class StateManager {
      * @param domain current application domain to update
      * @param shot   current application shot to update. Currently, ONLY SCENE and SHOT are available
      */
-    public void setCurrentAppInfo(final String domain, final String shot) {
+    public void setCurrentAppInfo(final String domain, String shot) {
         if (TextUtils.isEmpty(domain) || TextUtils.isEmpty(shot)) {
             Logger.e("current app info to update is invalid");
             return;

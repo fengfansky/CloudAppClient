@@ -21,11 +21,12 @@ public class VoiceAction extends BaseAction<TransferVoiceBean> {
     }
 
     @Override
-    public synchronized void startPlay() {
+    public synchronized void startAction() {
         if (null == mTransfer || !mTransfer.isValid()) {
             Logger.d("Now have a voice in running or TransferVoiceBean is empty.");
             return;
         }
+        Logger.d("VoiceAction startAction");
 
         // To check whether the voiceBean have confirm, if have confirm speak confirm TTS.
         VoiceItemBean VoiceItemBean = mTransfer.getVoiceBean().getItem();
@@ -42,20 +43,14 @@ public class VoiceAction extends BaseAction<TransferVoiceBean> {
     }
 
     @Override
-    public synchronized void pausePlay() {
-        //do nothing
-    }
-
-    @Override
-    public synchronized void stopPlay() {
-        Logger.d("stopVoice");
-
+    public synchronized void stopAction() {
         if (mTransfer == null) {
             Logger.d("voiceTransfer == null");
             return;
         }
 
-        Logger.d("Stop the current voice!");
+        Logger.d("VoiceAction stopAction");
+
         TTSHelper.getInstance().stopTTS(mTransfer.getTtsId());
         StateManager.getInstance().updateVoiceState(StateManager.VoiceState.STOPPED);
     }

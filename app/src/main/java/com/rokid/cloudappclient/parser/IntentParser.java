@@ -181,8 +181,8 @@ public class IntentParser {
             // when the response type is INTENT and the application shot is CUT, current action should be
             // stopped and the queue of cut should be cleared.
 
-            MediaAction.getInstance().stopPlay();
-            VoiceAction.getInstance().stopPlay();
+            MediaAction.getInstance().stopAction();
+            VoiceAction.getInstance().stopAction();
 
             MsgContainerManager.getInstance().clear();
         }

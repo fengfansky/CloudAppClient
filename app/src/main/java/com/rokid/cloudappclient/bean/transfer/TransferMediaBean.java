@@ -2,7 +2,6 @@ package com.rokid.cloudappclient.bean.transfer;
 
 import com.rokid.cloudappclient.bean.base.BaseTransferBean;
 import com.rokid.cloudappclient.bean.response.responseinfo.action.media.MediaBean;
-import com.rokid.rkaudioplayer.controller.RKAudioPlayer;
 
 /**
  * Description: TODO
@@ -12,7 +11,6 @@ import com.rokid.rkaudioplayer.controller.RKAudioPlayer;
 public class TransferMediaBean extends BaseTransferBean {
 
     private String mediaType;
-    private RKAudioPlayer rkAudioPlayer;
     // TODO
     // private VideoPlayer videoPlayer;
     private MediaBean mediaBean;
@@ -31,13 +29,6 @@ public class TransferMediaBean extends BaseTransferBean {
         this.mediaType = mediaType;
     }
 
-    public RKAudioPlayer getRkAudioPlayer() {
-        return rkAudioPlayer;
-    }
-
-    public void setRkAudioPlayer(RKAudioPlayer rkAudioPlayer) {
-        this.rkAudioPlayer = rkAudioPlayer;
-    }
 
     public MediaBean getMediaBean() {
         return mediaBean;

@@ -27,8 +27,8 @@ public class ActionBean {
      */
     public static final String TYPE_EXIT = "EXIT";
 
-    public static final String FORM_SCENE = "SCENE";
-    public static final String FORM_CUT = "CUT";
+    public static final String FORM_SCENE = "scene";
+    public static final String FORM_CUT = "cut";
 
     /**
      * 表明 action 协议版本，当前版本为: 2.0.0.
@@ -52,6 +52,10 @@ public class ActionBean {
     private String form;
 
     public String getForm() {
+
+        if (!TextUtils.isEmpty(form))
+            return form.toLowerCase();
+
         return form;
     }
 
