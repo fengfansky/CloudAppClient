@@ -1,1 +1,3 @@
-include ':app', ':rkaudioplayer'
+include ':app'
+include ':ijkplayer-java'
+

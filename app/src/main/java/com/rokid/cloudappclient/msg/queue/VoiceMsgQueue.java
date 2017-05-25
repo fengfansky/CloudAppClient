@@ -18,12 +18,12 @@ public class VoiceMsgQueue extends BaseMsgQueue<TransferVoiceBean> {
             return;
         }
 
-        Logger.d("TransferVoiceBean: ", voiceTransfer.toString());
+        Logger.d("VoiceMsgQueue.push voiceTransfer: " + voiceTransfer);
 
         String behaviour = voiceTransfer.getVoiceBean().getBehaviour();
         switch (behaviour) {
             case VoiceBean.BEHAVIOUR_CLEAR:
-                VoiceAction.getInstance().stopPlay();
+                VoiceAction.getInstance().stopAction();
                 msgQueue.clear();
                 break;
             case VoiceBean.BEHAVIOUR_APPEND:
@@ -34,12 +34,12 @@ public class VoiceMsgQueue extends BaseMsgQueue<TransferVoiceBean> {
                 msgQueue.add(voiceTransfer);
                 break;
             case VoiceBean.BEHAVIOUR_REPLACE_ALL:
-                VoiceAction.getInstance().stopPlay();
+                VoiceAction.getInstance().stopAction();
                 msgQueue.clear();
                 msgQueue.add(voiceTransfer);
                 break;
         }
-        Logger.d(String.format("voiceQueue size: %s", msgQueue.size()));
+        Logger.d(String.format("VoiceMsgQueue queue size : %s", msgQueue.size()));
 
         VoiceAction.getInstance().notifyPlayFinished(voiceTransfer);
     }

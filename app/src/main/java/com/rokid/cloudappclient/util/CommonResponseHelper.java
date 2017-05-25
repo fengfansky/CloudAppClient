@@ -41,7 +41,7 @@ public class CommonResponseHelper {
         }
 
         // check response shot
-        String shot = action.getResponse().getAction().getForm();
+        String shot = action.getResponse().getAction().getForm().toLowerCase();
 
         if (TextUtils.isEmpty(shot)) {
             Logger.i("checkCloudAppAction: form for response is invalid");

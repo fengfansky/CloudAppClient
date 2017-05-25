@@ -17,12 +17,12 @@ public class MediaMsgQueue extends BaseMsgQueue<TransferMediaBean> {
             Logger.d("Node or TransferMediaBean is invalid!!!");
             return;
         }
-        Logger.d("TransferMediaBean: ", mediaTransfer.toString());
+        Logger.d("MediaMsgQueue.push mediaTransfer: " + mediaTransfer);
 
         String behaviour = mediaTransfer.getMediaBean().getBehaviour();
         switch (behaviour) {
             case MediaBean.BEHAVIOUR_CLEAR:
-                MediaAction.getInstance().stopPlay();
+                MediaAction.getInstance().stopAction();
                 msgQueue.clear();
                 break;
             case MediaBean.BEHAVIOUR_APPEND:
@@ -33,12 +33,12 @@ public class MediaMsgQueue extends BaseMsgQueue<TransferMediaBean> {
                 msgQueue.add(mediaTransfer);
                 break;
             case MediaBean.BEHAVIOUR_REPLACE_ALL:
-                MediaAction.getInstance().stopPlay();
+                MediaAction.getInstance().stopAction();
                 msgQueue.clear();
                 msgQueue.add(mediaTransfer);
                 break;
         }
-        Logger.d(String.format("mediaQueue size: %s", msgQueue.size()));
+        Logger.d(String.format("MediaMsgQueue queue size: %s", msgQueue.size()));
 
         MediaAction.getInstance().notifyPlayFinished(mediaTransfer);
     }

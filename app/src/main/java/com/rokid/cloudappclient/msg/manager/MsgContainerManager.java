@@ -46,22 +46,21 @@ public class MsgContainerManager implements IMsgQueue {
             return;
         }
 
-        MsgContainer msgContainer;
-
+        Logger.d("push form " + transferBean.getShot());
         switch (transferBean.getShot()) {
             case ActionBean.FORM_SCENE:
                 if (null == sceneContainer || !transferBean.getDomain().equals(sceneContainer.domain)) {
                     sceneContainer = new MsgContainer(transferBean.getDomain());
                 }
-                msgContainer = sceneContainer;
-                msgContainer.push(transferBean);
+                Logger.d("sceneContainer.push transferBean " + transferBean);
+                sceneContainer.push(transferBean);
                 break;
             case ActionBean.FORM_CUT:
                 if (null == cutContainer || !transferBean.getDomain().equals(cutContainer.domain)) {
                     cutContainer = new MsgContainer(transferBean.getDomain());
                 }
-                msgContainer = cutContainer;
-                msgContainer.push(transferBean);
+                Logger.d("cutContainer.push transferBean " + transferBean);
+                cutContainer.push(transferBean);
                 break;
         }
 

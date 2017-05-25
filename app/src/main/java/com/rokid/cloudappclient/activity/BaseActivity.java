@@ -4,16 +4,14 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import com.rokid.cloudappclient.R;
-import com.rokid.cloudappclient.msg.manager.StateManager;
-import com.rokid.cloudappclient.parser.IntentParser;
-import com.rokid.cloudappclient.reporter.BaseReporter;
-import com.rokid.cloudappclient.reporter.ReporterManager;
-import com.rokid.cloudappclient.reporter.VoiceReporter;
+//import com.rokid.cloudappclient.msg.manager.StateManager;
+//import com.rokid.cloudappclient.parser.IntentParser;
+//import com.rokid.cloudappclient.reporter.BaseReporter;
+//import com.rokid.cloudappclient.reporter.ReporterManager;
+//import com.rokid.cloudappclient.reporter.VoiceReporter;
 import com.rokid.cloudappclient.util.Logger;
 import com.rokid.cloudappclient.tts.TTSHelper;
 import com.rokid.cloudappclient.tts.TTSSpeakInterface;
-
-import java.lang.ref.WeakReference;
 
 /**
  * This is a basic Activity, all the Activity in the project are to extends it.
@@ -25,9 +23,9 @@ import java.lang.ref.WeakReference;
 public abstract class BaseActivity extends Activity implements TTSHelper.TTSCallback, TTSSpeakInterface {
 
 
-    private WeakReference<IntentParser> parserWeakReference = new WeakReference<>(new IntentParser(this));
-
-    ReporterManager reporterManager;
+//    private IntentParser intentParser = new IntentParser(this);
+//
+//    ReporterManager reporterManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -38,8 +36,8 @@ public abstract class BaseActivity extends Activity implements TTSHelper.TTSCall
         //TODO test
 
 //        initTTS();
-        reporterManager = ReporterManager.getInstance();
-        parserWeakReference.get().startParse(getIntent());
+//        reporterManager = ReporterManager.getInstance();
+//        intentParser.startParse(getIntent());
     }
 
     @Override
@@ -47,7 +45,7 @@ public abstract class BaseActivity extends Activity implements TTSHelper.TTSCall
         super.onNewIntent(intent);
         Logger.d("RKCloudAppActivity onNewIntent");
 
-        parserWeakReference.get().startParse(getIntent());
+//        intentParser.startParse(intent);
         setIntent(intent);
     }
 
@@ -68,9 +66,9 @@ public abstract class BaseActivity extends Activity implements TTSHelper.TTSCall
         super.onResume();
         Logger.d("RKCloudAppActivity onResume");
 
-        if (StateManager.getInstance().getAppState() == StateManager.AppState.PENDING) {
-            StateManager.getInstance().restoreAllLastState();
-        }
+//        if (StateManager.getInstance().getAppState() == StateManager.AppState.PENDING) {
+//            StateManager.getInstance().restoreAllLastState();
+//        }
 
     }
 
@@ -79,8 +77,8 @@ public abstract class BaseActivity extends Activity implements TTSHelper.TTSCall
         super.onPause();
         Logger.d("RKCloudAppActivity onPause");
 
-        StateManager.getInstance().updateAppState(StateManager.AppState.PENDING);
-        StateManager.getInstance().storeAllLastState();
+//        StateManager.getInstance().updateAppState(StateManager.AppState.PENDING);
+//        StateManager.getInstance().storeAllLastState();
     }
 
     @Override
@@ -106,14 +104,14 @@ public abstract class BaseActivity extends Activity implements TTSHelper.TTSCall
 
     @Override
     public void onTTSStart(int id) {
-        sendReport(VoiceReporter.START);
+//        sendReport(VoiceReporter.START);
     }
 
     @Override
     public void onTTSFinish() {
         Logger.d("onTTSFinish finish()");
-        StateManager.getInstance().updateVoiceState(StateManager.VoiceState.STOPPED);
-        sendReport(VoiceReporter.FINISHED);
+//        StateManager.getInstance().updateVoiceState(StateManager.VoiceState.STOPPED);
+//        sendReport(VoiceReporter.FINISHED);
         finish();
     }
 
@@ -166,11 +164,11 @@ public abstract class BaseActivity extends Activity implements TTSHelper.TTSCall
     protected abstract void initViews(Bundle savedInstanceState);
 
 
-    private static void sendReport(String action) {
-        BaseReporter reporter = new VoiceReporter();
-        reporter.setEvent(action);
-        //TODO setExtra
-        reporter.setExtra(action);
-        ReporterManager.getInstance().executeReporter(reporter);
-    }
+//    private static void sendReport(String action) {
+//        BaseReporter reporter = new VoiceReporter();
+//        reporter.setEvent(action);
+//        //TODO setExtra
+//        reporter.setExtra(action);
+//        ReporterManager.getInstance().executeReporter(reporter);
+//    }
 }
