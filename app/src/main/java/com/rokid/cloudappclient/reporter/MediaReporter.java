@@ -10,4 +10,8 @@ public class MediaReporter extends BaseReporter {
     public static final String PAUSED = "Media.PAUSED";
     public static final String FINISHED = "Media.FINISHED";
     public static final String NEAR_FINISH = "Media.NEAR_FINISH";
+
+    public MediaReporter(String event, String extra) {
+        super(event, extra);
+    }
 }

@@ -1,7 +1,5 @@
 package com.rokid.cloudappclient.util;
 
-import android.util.Log;
-
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
 import java.security.MessageDigest;
@@ -30,8 +28,6 @@ public class MD5Utils {
             String value = params.get(key);
             query.append(key).append("=").append(value).append("&");
         }
-
-        Logger.d("query param is " + query.toString());
 
         query.append(SECRET_KEY).append("=").append(SECRET_VALUE);
 
@@ -66,7 +62,7 @@ public class MD5Utils {
             }
             sign.append(hex.toUpperCase());
         }
-        Log.d("yunos", "generate sign is " + sign.toString());
+        Logger.d("generate sign is " + sign.toString());
         return sign.toString();
     }
 

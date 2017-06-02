@@ -8,8 +8,12 @@ import com.rokid.cloudappclient.bean.response.responseinfo.action.media.MediaBea
 import com.rokid.cloudappclient.bean.response.responseinfo.action.media.MediaItemBean;
 import com.rokid.cloudappclient.bean.transfer.TransferMediaBean;
 import com.rokid.cloudappclient.msg.manager.StateManager;
+import com.rokid.cloudappclient.parser.CommonResponseParser;
 import com.rokid.cloudappclient.player.RKAudioPlayer;
+import com.rokid.cloudappclient.reporter.BaseReporter;
+import com.rokid.cloudappclient.reporter.MediaReporter;
 import com.rokid.cloudappclient.util.Logger;
+import com.squareup.okhttp.Response;
 
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 
@@ -19,7 +23,7 @@ public class MediaAction extends BaseAction<TransferMediaBean> {
 
     private RKAudioPlayer rkAudioPlayer;
 
-    private static final String STREAMING_PLAY = "streaming_play";
+    private static final String STREAMING_PLAY = "PLAY";
     private static final String STREAMING_PAUSE = "streaming_pause";
     private static final String STREAMING_RESUME = "streaming_resume";
     private static final String STREAMING_STOP = "streaming_stop";
@@ -39,14 +43,17 @@ public class MediaAction extends BaseAction<TransferMediaBean> {
             public void onPrepared(IMediaPlayer mp) {
                 Logger.d("MediaAction startAction onPrepared");
                 StateManager.getInstance().updateMediaState(StateManager.MediaState.PLAYING);
+                sendReporter(MediaReporter.START);
             }
         });
+
         rkAudioPlayer.setmOnCompletionListener(new IMediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(IMediaPlayer mp) {
                 Logger.d("MediaAction startAction onCompletion");
                 StateManager.getInstance().updateMediaState(StateManager.MediaState.STOPPED);
-                notifyPlayFinished(mTransfer);
+                sendReporter(MediaReporter.FINISHED);
+//                notifyPlayFinished(mTransfer);
             }
         });
     }
@@ -99,23 +106,16 @@ public class MediaAction extends BaseAction<TransferMediaBean> {
             case STREAMING_BACKWARD:
                 backward();
             default:
-                Logger.d(" invalidate action !" + action);
+                Logger.d(" invalidate action ! " + action);
         }
 
     }
 
     @Override
     public synchronized void stopAction() {
-
-        if (mTransfer == null) {
-            Logger.d("mTransfer == null");
-            return;
-        }
         Logger.d("MediaAction stopAction");
-
-        rkAudioPlayer.release(true);
+        pausePlay();
         StateManager.getInstance().updateMediaState(StateManager.MediaState.STOPPED);
-
     }
 
     private void startPlay(MediaBean mediaBean) {
@@ -176,5 +176,22 @@ public class MediaAction extends BaseAction<TransferMediaBean> {
         }
     }
 
+    private void sendReporter(String evnet) {
+        BaseReporter baseReporter = new MediaReporter(evnet, "{}");
+        baseReporter.setOnResponseCallback(new BaseReporter.ReporterResponseCallBack() {
+
+            @Override
+            public void callBack(Response response) {
+                if (response == null) {
+                    Logger.d("sendRequest response callback is null!");
+                } else if (!response.isSuccessful()) {
+                    Logger.d("sendRequest response not success! response : " + response);
+                } else {
+                    Logger.d("sendRequest response success! response : " + response);
+                    CommonResponseParser.getInstance().parseSendEventResponse(response);
+                }
+            }
+        });
+    }
 
 }

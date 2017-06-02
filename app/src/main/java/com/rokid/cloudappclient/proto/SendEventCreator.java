@@ -1,4 +1,4 @@
-package com.rokid.cloudappclient.protro;
+package com.rokid.cloudappclient.proto;
 
 /**
  * Created by fanfeng on 2017/5/11.
@@ -17,12 +17,4 @@ public class SendEventCreator {
         return sendEventRequest;
     }
 
-    public static SendEvent.SendEventResponse generateSendEventResponse(String response) {
-        SendEvent.SendEventResponse sendEventResponse = SendEvent.SendEventResponse
-                .newBuilder()
-                .setResponse(response)
-                .build();
-
-        return sendEventResponse;
-    }
 }

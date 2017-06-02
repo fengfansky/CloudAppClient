@@ -1,6 +1,5 @@
 package com.rokid.cloudappclient.util;
 
-import com.google.gson.Gson;
 import com.rokid.cloudappclient.bean.DeviceInfoBean;
 
 /**
@@ -9,7 +8,7 @@ import com.rokid.cloudappclient.bean.DeviceInfoBean;
 
 public class DeviceInfoUtil {
 
-    private static final String APP_ID = "841f3558-f3d4-43f6-911a-6f80b62b352d";
+    private static final String APP_ID = "R0F4D9F07E9646BAA11B1CE36229B26B";
 
     private static DeviceInfoBean deviceInfoBean;
 

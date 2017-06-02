@@ -2,8 +2,6 @@ package com.rokid.cloudappclient.util;
 
 import android.util.Log;
 
-import com.rokid.cloudappclient.BuildConfig;
-
 import java.util.Locale;
 
 /**
@@ -40,9 +38,7 @@ public class Logger {
      * @param messages These messages you would like logged.
      */
     public static void d(String... messages) {
-        if (BuildConfig.DEBUG) {
-            Log.d(generateTag(), concatMessage(messages));
-        }
+        Log.d(generateTag(), concatMessage(messages));
     }
 
     /**

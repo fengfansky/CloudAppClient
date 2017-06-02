@@ -1,10 +1,5 @@
 package com.rokid.cloudappclient.http;
 
-import android.util.Log;
-
-import com.rokid.cloudappclient.util.Logger;
-
-import java.util.Map;
 
 /**
  * Created by fanfeng on 2017/5/11.
@@ -16,25 +11,13 @@ public class BaseUrlConfig {
 
     public static final String BASE_URL = "https://apigwrest-dev.open.rokid.com";
 
-    public static String getUrl(Map<String, String> params) {
-        if (params == null || params.isEmpty())
-            return BASE_URL;
+    public static final String PATH = "/v1/skill/dispatch/sendEvent";
 
-        String baseUrl = BASE_URL + "?";
+    public static String getUrl() {
 
-        String paramStr = getParamStr(params);
+        String baseUrl = BASE_URL.concat(PATH);
 
-        return baseUrl.concat(paramStr);
+        return baseUrl;
     }
 
-
-    public static String getParamStr(Map<String, String> params) {
-        StringBuilder sb = new StringBuilder();
-        for (Map.Entry<String, String> entry : params.entrySet()) {
-            sb.append(entry.getKey() + "=" + entry.getValue() + "&");
-        }
-        sb.deleteCharAt(sb.length() - 1);
-        Log.d(TAG, "param : " + sb.toString());
-        return sb.toString();
-    }
 }

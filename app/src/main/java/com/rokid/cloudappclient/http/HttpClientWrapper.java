@@ -1,13 +1,13 @@
 package com.rokid.cloudappclient.http;
 
-import com.rokid.cloudappclient.protro.SendEvent;
+import com.rokid.cloudappclient.proto.SendEvent;
 import com.rokid.cloudappclient.util.Logger;
+import com.squareup.okhttp.*;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
-import okhttp3.*;
 
 /**
  * Created by fanfeng on 2017/5/11.
@@ -23,30 +23,31 @@ public class HttpClientWrapper {
     private static final String CONTENT_TYPE = "application/octet-stream";
 
     public HttpClientWrapper() {
+        okHttpClient = new OkHttpClient();
+        okHttpClient.setConnectTimeout(CONNECTION_TIME_OUT, TimeUnit.SECONDS);
+        okHttpClient.setReadTimeout(READ_TIME_OUT, TimeUnit.SECONDS);
+        okHttpClient.setWriteTimeout(WRITE_TIME_OUT, TimeUnit.SECONDS);
 
-        okHttpClient = new OkHttpClient().newBuilder()
-                .connectTimeout(CONNECTION_TIME_OUT, TimeUnit.SECONDS)
-                .readTimeout(READ_TIME_OUT, TimeUnit.SECONDS)
-                .writeTimeout(WRITE_TIME_OUT, TimeUnit.SECONDS)
-                .build();
     }
 
     public static HttpClientWrapper getInstance() {
         return SingleHolder.instance;
     }
 
-    public static void sendRequest(String url, SendEvent.SendEventRequest eventRequest) {
+    public void sendRequest(String url, BaseParameter params, SendEvent.SendEventRequest eventRequest) {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         try {
             eventRequest.writeTo(byteArrayOutputStream);
         } catch (IOException e) {
             e.printStackTrace();
         }
+        Logger.d("authorization " + params.getAuthorization());
         Request request = new Request.Builder()
                 .url(url)
                 .header("Accept", "text/plain")
                 .addHeader("Accept-Charset", "utf-8")
                 .addHeader("Cache-Control", "no-cache")
+                .addHeader("Authorization", params.getAuthorization())
                 .post(RequestBody.create(MediaType.parse(CONTENT_TYPE)
                         , byteArrayOutputStream.toByteArray()))
                 .build();
@@ -61,7 +62,7 @@ public class HttpClientWrapper {
         } else if (!response.isSuccessful()) {
             Logger.d("sendRequest response not success! response : " + response);
         } else {
-            Logger.d("sendRequest response success! response : " + response);
+            Logger.d("sendRequest response success! response : " + response.body());
         }
     }
 

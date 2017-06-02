@@ -1,8 +1,5 @@
 package com.rokid.cloudappclient.util;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 /**
  * Created by fanfeng on 2017/5/13.
  */
@@ -15,9 +12,6 @@ public class TimeUtils {
      * @return
      */
     public static String getCurrentTimeStamp() {
-        Date currentDate = new Date();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Logger.d("timeStamp is " + simpleDateFormat.format(currentDate));
-        return simpleDateFormat.format(currentDate);
+        return String.valueOf(System.currentTimeMillis());
     }
 }

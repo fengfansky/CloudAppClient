@@ -3,29 +3,29 @@ package com.rokid.cloudappclient.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+
 import com.rokid.cloudappclient.R;
-//import com.rokid.cloudappclient.msg.manager.StateManager;
-//import com.rokid.cloudappclient.parser.IntentParser;
-//import com.rokid.cloudappclient.reporter.BaseReporter;
-//import com.rokid.cloudappclient.reporter.ReporterManager;
-//import com.rokid.cloudappclient.reporter.VoiceReporter;
+import com.rokid.cloudappclient.msg.manager.StateManager;
+import com.rokid.cloudappclient.parser.CommonResponseParser;
+import com.rokid.cloudappclient.parser.IntentParser;
+import com.rokid.cloudappclient.reporter.BaseReporter;
+import com.rokid.cloudappclient.reporter.ReporterManager;
+import com.rokid.cloudappclient.reporter.VoiceReporter;
 import com.rokid.cloudappclient.util.Logger;
 import com.rokid.cloudappclient.tts.TTSHelper;
 import com.rokid.cloudappclient.tts.TTSSpeakInterface;
+import com.squareup.okhttp.Response;
 
 /**
  * This is a basic Activity, all the Activity in the project are to extends it.
  * It management common life cycle and have some common methods to parse intent、NLP and error TTS.
  *
- * Author: xupan.shi
- * Version: V0.1 2017/3/9
+ * Author: fengfan
+ * Modified: 2017/06/01
  */
 public abstract class BaseActivity extends Activity implements TTSHelper.TTSCallback, TTSSpeakInterface {
 
-
-//    private IntentParser intentParser = new IntentParser(this);
-//
-//    ReporterManager reporterManager;
+    IntentParser intentParser = new IntentParser(this);
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -33,19 +33,19 @@ public abstract class BaseActivity extends Activity implements TTSHelper.TTSCall
         Logger.d("RKCloudAppActivity OnCreated");
 
         initViews(savedInstanceState);
-        //TODO test
-
-//        initTTS();
-//        reporterManager = ReporterManager.getInstance();
-//        intentParser.startParse(getIntent());
+        CommonResponseParser.getInstance().setTTSSpeakInterface(this);
+        intentParser.parseIntent(getIntent());
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         Logger.d("RKCloudAppActivity onNewIntent");
-
-//        intentParser.startParse(intent);
+        if (intent == null) {
+            Logger.d("intent null !");
+            return;
+        }
+        intentParser.parseIntent(intent);
         setIntent(intent);
     }
 
@@ -66,10 +66,9 @@ public abstract class BaseActivity extends Activity implements TTSHelper.TTSCall
         super.onResume();
         Logger.d("RKCloudAppActivity onResume");
 
-//        if (StateManager.getInstance().getAppState() == StateManager.AppState.PENDING) {
-//            StateManager.getInstance().restoreAllLastState();
-//        }
-
+        if (StateManager.getInstance().getAppState() == StateManager.AppState.PENDING) {
+            StateManager.getInstance().restoreAllLastState();
+        }
     }
 
     @Override
@@ -77,8 +76,8 @@ public abstract class BaseActivity extends Activity implements TTSHelper.TTSCall
         super.onPause();
         Logger.d("RKCloudAppActivity onPause");
 
-//        StateManager.getInstance().updateAppState(StateManager.AppState.PENDING);
-//        StateManager.getInstance().storeAllLastState();
+        StateManager.getInstance().updateAppState(StateManager.AppState.PENDING);
+        StateManager.getInstance().storeAllLastState();
     }
 
     @Override
@@ -104,15 +103,15 @@ public abstract class BaseActivity extends Activity implements TTSHelper.TTSCall
 
     @Override
     public void onTTSStart(int id) {
-//        sendReport(VoiceReporter.START);
+        sendReport(VoiceReporter.START);
     }
 
     @Override
     public void onTTSFinish() {
         Logger.d("onTTSFinish finish()");
-//        StateManager.getInstance().updateVoiceState(StateManager.VoiceState.STOPPED);
-//        sendReport(VoiceReporter.FINISHED);
-        finish();
+        StateManager.getInstance().updateVoiceState(StateManager.VoiceState.STOPPED);
+        sendReport(VoiceReporter.FINISHED);
+//        finish();
     }
 
     @Override
@@ -153,22 +152,23 @@ public abstract class BaseActivity extends Activity implements TTSHelper.TTSCall
     public void finishActivity() {
         finish();
     }
-
     /**
      * ------------------TTS REFERENCE END---------------------
      **/
-
 
     protected abstract int getLayoutId();
 
     protected abstract void initViews(Bundle savedInstanceState);
 
+    private static void sendReport(String event) {
+        BaseReporter reporter = new VoiceReporter(event, "{}");
+        reporter.setOnResponseCallback(new BaseReporter.ReporterResponseCallBack() {
+            @Override
+            public void callBack(Response response) {
+                CommonResponseParser.getInstance().parseSendEventResponse(response);
+            }
+        });
+        ReporterManager.getInstance().executeReporter(reporter);
+    }
 
-//    private static void sendReport(String action) {
-//        BaseReporter reporter = new VoiceReporter();
-//        reporter.setEvent(action);
-//        //TODO setExtra
-//        reporter.setExtra(action);
-//        ReporterManager.getInstance().executeReporter(reporter);
-//    }
 }

@@ -16,11 +16,11 @@ import java.util.Map;
 
 public class BaseParameter {
 
-    private static final String SERVICE = "rest";
     public static final String PARAM_KEY_KEY = "key";
     public static final String PARAM_KEY_DEVICE_TYPE_ID = "device_type_id";
     public static final String PARAM_KEY_DEVICE_ID = "device_id";
     public static final String PARAM_KEY_SERVICE = "service";
+    private static final String PARAM_VALUE_SERVICE = "rest";
     public static final String PARAM_KEY_VERSION = "version";
     public static final String PARAM_KEY_TIME = "time";
     public static final String PARAM_KEY_SIGN = "sign";
@@ -47,14 +47,25 @@ public class BaseParameter {
             return null;
         }
         putUnEmptyParam(PARAM_KEY_KEY, deviceInfo.getKey());
-        putUnEmptyParam(PARAM_KEY_DEVICE_TYPE_ID, deviceInfo.getDevice_type_id());
-        putUnEmptyParam(PARAM_KEY_DEVICE_ID, deviceInfo.getDevice_id());
+        putUnEmptyParam(PARAM_KEY_DEVICE_TYPE_ID, deviceInfo.getDeviceTypeId());
+        putUnEmptyParam(PARAM_KEY_DEVICE_ID, deviceInfo.getDeviceId());
         putUnEmptyParam(PARAM_KEY_VERSION, deviceInfo.getApi_version());
         putUnEmptyParam(PARAM_KEY_TIME, TimeUtils.getCurrentTimeStamp());
-        putUnEmptyParam(PARAM_KEY_SERVICE, SERVICE);
-
+        putUnEmptyParam(PARAM_KEY_SERVICE, PARAM_VALUE_SERVICE);
         putUnEmptyParam(PARAM_KEY_SIGN, MD5Utils.generateMD5(params));
         return params;
+    }
+
+    public String getAuthorization() {
+        generateParams();
+        if (params == null && params.isEmpty()) {
+            Logger.d("param invalidate !!!");
+            return null;
+        }
+
+        String authorization = params.toString()
+                .replace("{", "").replace("}", "").replace(",", ";").replace(" ", "");
+        return authorization;
     }
 
 }
